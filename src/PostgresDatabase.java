@@ -22,10 +22,7 @@ public class PostgresDatabase {
 			// Establish the database connection
 			connection = DriverManager.getConnection(jdbcUrl, username, password);
 
-			// Do your database operations here
-			if (connection != null) {
-				System.out.println("Database connection established");
-			} else {
+			if (connection == null) {
 				System.out.println("Database connection failed");
 				throw new SQLException();
 			}

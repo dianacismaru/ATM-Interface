@@ -118,22 +118,12 @@ public class User {
     }
 
     public void printTransactionHistory() {
-        if (transactions.size() == 0) {
+        if (transactions.isEmpty()) {
             System.out.println("No transaction has been made yet.\n");
             return;
         }
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", uid='" + uid + '\'' +
-                ", pinHash='" + pinHash + '\'' +
-                '}';
     }
 }

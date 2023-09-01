@@ -23,8 +23,6 @@ public class Bank {
             User user = new User(uid, firstName, lastName, pinHash);
             users.add(user);
         }
-
-        System.out.println(users);
     }
 
     public static String generateUID() throws SQLException {
@@ -102,12 +100,9 @@ public class Bank {
         for (User user: this.users) {
             // Check if the user exists in the system
             if (user.getUID().equals(uid) && user.validatePin(pin)) {
-
                 return user;
             }
         }
-
-        System.out.println("nu exista");
 
         if (attempts != 0){
             System.out.println("The introduced data is wrong. Please, try again!\n"
