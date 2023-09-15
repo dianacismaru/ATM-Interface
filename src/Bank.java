@@ -22,7 +22,7 @@ public class Bank {
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
             String pinHash = resultSet.getString("pin_hash");
-            User user = new User(uid, firstName, lastName, pinHash);
+            User user = new User(this, uid, firstName, lastName, pinHash);
             users.add(user);
         }
     }
@@ -41,7 +41,7 @@ public class Bank {
             }
 
             // Make sure the ID is unique
-            String query = String.format("SELECT * FROM users WHERE uid = '%s'", uid.toString());
+            String query = String.format("SELECT * FROM users WHERE uid = '%s'", uid);
             ResultSet resultSet = Main.database.getQueryResult(query);
             if (resultSet.next()) {
                 isUidUnique = false;

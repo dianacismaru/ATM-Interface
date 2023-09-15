@@ -38,8 +38,8 @@ public class PostgresDatabase {
 			String query = "CREATE TABLE users (" +
 					"uid VARCHAR(10) PRIMARY KEY," +
 					"first_name VARCHAR(50)," +
-					"last_name VARCHAR(50)," +
-					"pin_hash VARCHAR(16)" +
+					"lastName VARCHAR(50)," +
+					"pinHash VARCHAR(16)" +
 					")";
 
 			Statement statement = connection.createStatement();
@@ -52,16 +52,18 @@ public class PostgresDatabase {
 	}
 
 	public void addRecord(String uid, String firstName,
-						  String last_name, String pin_hash) {
+						  String lastName, String pinHash) {
 		try {
 			String query = String.format("INSERT INTO %s " +
 							"(uid, first_name, last_name, pin_hash)" +
 							"VALUES ('%s', '%s', '%s', '%s');",
-					"users", uid, firstName, last_name, pin_hash);
+					"users", uid, firstName, lastName, pinHash);
 
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(query);
-			System.out.println("Row inserted successfully");
+			
+			System.out.printf("User '%s %s' with ID '%s' has been created.\n",
+					lastName, firstName, uid);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

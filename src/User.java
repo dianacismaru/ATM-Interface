@@ -1,5 +1,6 @@
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +23,8 @@ public class User {
         System.out.println("Your balance is: " + this.balance + "EUR");
     }
 
-    public User(String uid, String firstName, String lastName, String pinHash) {
+    public User(Bank bank, String uid, String firstName, String lastName, String pinHash) {
+        this.bank = bank;
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,10 +38,6 @@ public class User {
         this.bank = bank;
 
         Main.database.addRecord(uid, firstName, lastName, pin);
-
-        System.out.printf("User '%s %s' with ID '%s' has been created.\n",
-                          lastName, firstName, this.uid);
-
     }
 
     public void changePin() throws NoSuchAlgorithmException {
@@ -55,10 +53,16 @@ public class User {
         System.out.print("Type your new PIN code: ");
         String newPin = bank.generatePinHash(input.next());
 
-        if (newPin != null) {
+        try {
+            String query = String.format("UPDATE users SET pin_hash  = '%s' " +
+                    "WHERE uid = '%s'", newPin, uid);
+
+            Statement statement = PostgresDatabase.connection.createStatement();
+            statement.executeUpdate(query);
             this.pinHash = newPin;
+
             System.out.println("The PIN code has been changed.\n");
-        } else {
+        } catch (Exception e) {
             System.out.println("The PIN code could not be changed.\n");
         }
     }
