@@ -1,22 +1,18 @@
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class User {
-    String firstName;
-    String lastName;
-
+    private final String firstName;
+    private final String lastName;
     private final String uid;
+    private Bank bank;
 
     /**
-     *     The MD5 hash of the user's PIN
+     *     The SHA-256 hash of the user's PIN
      */
     private String pinHash;
-
-    private byte[] pinHashBytes;
 
     private double balance;
 
@@ -26,14 +22,6 @@ public class User {
         System.out.println("Your balance is: " + this.balance + "EUR");
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double amount) {
-        this.balance += amount;
-    }
-
     public User(String uid, String firstName, String lastName, String pinHash) {
         this.uid = uid;
         this.firstName = firstName;
@@ -41,52 +29,17 @@ public class User {
         this.pinHash = pinHash;
     }
 
-    public User(String firstName, String lastName, String pin) throws NoSuchAlgorithmException, SQLException {
+    public User(String firstName, String lastName, String pin, Bank bank) throws SQLException {
         this.uid = Bank.generateUID();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bank = bank;
 
-        // Check if the introduced PIN has exactly 4 non-repetitive digits
-        if (pin.length() != 4) {
-            System.out.println("User cannot be created. The PIN code should have exactly 4 digits.\n");
-        } else if (!pin.matches("^(?!(.)\\1{3})\\d{4}$")) {
-            System.out.println("User cannot be created. The introduced PIN may not be safe enough!\n");
-        } else {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.transactions = new ArrayList<>();
+        Main.database.addRecord(uid, firstName, lastName, pin);
 
-            // For security reasons, store the PIN's MD5 hash
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            this.pinHashBytes = md.digest(pin.getBytes());
+        System.out.printf("User '%s %s' with ID '%s' has been created.\n",
+                          lastName, firstName, this.uid);
 
-            StringBuilder hexStringBuilder = new StringBuilder(2 * pinHashBytes.length);
-            for (byte b : pinHashBytes) {
-                hexStringBuilder.append(String.format("%02X", b));
-            }
-            this.pinHash = hexStringBuilder.toString();
-
-            Main.database.addRecord(uid, firstName, lastName, pinHash);
-
-            System.out.printf("User '%s %s' with ID '%s' has been created.\n",
-                              lastName, firstName, this.uid);
-        }
-    }
-
-    public String getUID() {
-        return this.uid;
-    }
-
-    /**
-     * Check if the introduced PIN code corresponds to the user
-     */
-    public boolean validatePin(String pin) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] bytes = md.digest(pin.getBytes());
-
-        StringBuilder hexStringBuilder = new StringBuilder(2 * bytes.length);
-        for (byte b : bytes) {
-            hexStringBuilder.append(String.format("%02X", b));
-        }
-        return hexStringBuilder.toString().equals(pinHash);
     }
 
     public void changePin() throws NoSuchAlgorithmException {
@@ -94,27 +47,20 @@ public class User {
         System.out.print("Type your current PIN code: ");
         String oldPin = input.next();
 
-        if (!this.validatePin(oldPin)) {
+        if (!bank.validatePin(oldPin, pinHash)) {
             System.out.println("The PIN code is incorrect. You may try again.\n");
             return;
         }
 
         System.out.print("Type your new PIN code: ");
-        String newPin = input.next();
-        if (newPin.matches("^(?!(.)\\1{3})\\d{4}$")) {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            this.pinHashBytes = md.digest(newPin.getBytes());
+        String newPin = bank.generatePinHash(input.next());
 
-            StringBuilder hexStringBuilder = new StringBuilder(2 * pinHashBytes.length);
-            for (byte b : pinHashBytes) {
-                hexStringBuilder.append(String.format("%02X", b));
-            }
-            this.pinHash = hexStringBuilder.toString();
-
+        if (newPin != null) {
+            this.pinHash = newPin;
             System.out.println("The PIN code has been changed.\n");
-            return;
+        } else {
+            System.out.println("The PIN code could not be changed.\n");
         }
-        System.out.println("The PIN code could not be changed.\n");
     }
 
     public void printTransactionHistory() {
@@ -126,4 +72,29 @@ public class User {
             System.out.println(transaction);
         }
     }
+
+    public String getPinHash() {
+        return pinHash;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void modifyBalance(double amount) {
+        this.balance += amount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
 }

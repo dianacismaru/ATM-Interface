@@ -15,7 +15,7 @@ public class Transaction {
     /**
      *     The user that has made this transaction
      */
-    private User user;
+    private final User user;
 
     String transactionType;
 
@@ -49,7 +49,7 @@ public class Transaction {
             return;
         }
 
-        this.user.setBalance(this.amount);
+        this.user.modifyBalance(this.amount);
         this.transactionType = "deposit";
         user.transactions.add(this);
         System.out.println("Your balance increased with " + amount + "EUR.\n");
@@ -64,7 +64,7 @@ public class Transaction {
         if (this.amount > user.getBalance()) {
             System.out.println("The withdrawal cannot be done. Your balance is too low.\n");
         } else {
-            this.user.setBalance(-this.amount);
+            this.user.modifyBalance(-this.amount);
             this.transactionType = "withdrawal";
             user.transactions.add(this);
             System.out.println("Your balance went down with " + amount + "EUR.\n");
@@ -82,7 +82,7 @@ public class Transaction {
 
         Scanner input = new Scanner(System.in);
         System.out.print("Enter the amount of money you would like to transfer to "
-                           + recipient.firstName + " " + recipient.lastName + ": ");
+                           + recipient.getFirstName() + " " + recipient.getLastName() + ": ");
         this.amount = input.nextDouble();
 
         if (this.amount <= 0) {
@@ -96,13 +96,13 @@ public class Transaction {
         }
 
         System.out.println("Are you sure you want to transfer " + amount + "EUR to "
-                           + recipient.firstName + " " + recipient.lastName + "?");
+                           + recipient.getFirstName() + " " + recipient.getLastName() + "?");
         System.out.print("Type YES or NO: ");
         String answer = input.next();
 
         if (answer.equals("YES")) {
-            user.setBalance(-amount);
-            recipient.setBalance(amount);
+            user.modifyBalance(-amount);
+            recipient.modifyBalance(amount);
             System.out.println("The transaction is complete!\n");
             user.transactions.add(this);
         } else {

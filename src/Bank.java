@@ -1,3 +1,4 @@
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ public class Bank {
         String query = "SELECT * FROM users;";
         ResultSet resultSet = Main.database.getQueryResult(query);
 
+        // Create a list of all the users from the bank's database
         while (resultSet.next()) {
             String uid = resultSet.getString("uid");
             String firstName = resultSet.getString("first_name");
@@ -28,25 +30,25 @@ public class Bank {
     public static String generateUID() throws SQLException {
         Random random = new Random();
         boolean isUidUnique = true;
-        String uid;
+        StringBuilder uid;
 
         do {
             // Create a random ID
-            uid = "";
+            uid = new StringBuilder();
             int uidLen = 6;
             for (int c = 0; c < uidLen; c++) {
-                uid += ((Integer)random.nextInt(10));
+                uid.append((Integer) random.nextInt(10));
             }
 
             // Make sure the ID is unique
-            String query = String.format("SELECT * FROM users WHERE uid = '%s'", uid);
+            String query = String.format("SELECT * FROM users WHERE uid = '%s'", uid.toString());
             ResultSet resultSet = Main.database.getQueryResult(query);
             if (resultSet.next()) {
                 isUidUnique = false;
             }
         } while(!isUidUnique);
 
-        return uid;
+        return uid.toString();
     }
 
     public void createAccount() throws NoSuchAlgorithmException, SQLException {
@@ -56,7 +58,7 @@ public class Bank {
         int numberOfUsers = scanner.nextInt();
         
         if (numberOfUsers < 1) {
-            System.out.println("-------------------------------------------------");
+            System.out.println(Main.SEPARATOR);
             return;
         }
         
@@ -64,7 +66,7 @@ public class Bank {
             System.out.println("\nIntroduce data for a new user.");
             requestUserData();
         }
-        System.out.println("-------------------------------------------------");
+        System.out.println(Main.SEPARATOR);
     }
     
     public void requestUserData() throws NoSuchAlgorithmException, SQLException {
@@ -86,25 +88,49 @@ public class Bank {
         }
 
         System.out.print("PIN code: ");
-        createUser(firstName, lastName, scanner.next());
-    }
+        String pin = generatePinHash(scanner.next());
 
-    private void createUser(String firstName, String lastName, String pin) throws NoSuchAlgorithmException, SQLException {
-        User user = new User(firstName, lastName, pin);
-        if (user.firstName != null) {
-            this.users.add(user);
+        if (pin != null) {
+            User user = new User(firstName, lastName, pin, this);
+            users.add(user);
         }
     }
 
+    public String generatePinHash(String pin) throws NoSuchAlgorithmException {
+        // Check if the introduced PIN has exactly 4 non-repetitive digits
+        if (pin.length() != 4) {
+            System.out.println("The PIN code should have exactly 4 digits.\n");
+            return null;
+        }
+
+        if (!pin.matches("^(?!(.)\\1{3})\\d{4}$")) {
+            System.out.println("The introduced PIN may not be safe enough!\n");
+            return null;
+        }
+        return encryptPIN(pin);
+    }
+
+    public String encryptPIN(String pin) throws NoSuchAlgorithmException {
+        // For security reasons, encrypt the PIN with SHA-256
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] pinHashBytes = md.digest(pin.getBytes());
+
+        StringBuilder hexStringBuilder = new StringBuilder(2 * pinHashBytes.length);
+        for (byte b: pinHashBytes) {
+            hexStringBuilder.append(String.format("%02X", b));
+        }
+
+        return hexStringBuilder.toString();
+    }
     public User userLogin(String uid, String pin, int attempts) throws NoSuchAlgorithmException {
         for (User user: this.users) {
             // Check if the user exists in the system
-            if (user.getUID().equals(uid) && user.validatePin(pin)) {
+            if (user.getUid().equals(uid) && validatePin(pin, user.getPinHash())) {
                 return user;
             }
         }
 
-        if (attempts != 0){
+        if (attempts != 0) {
             System.out.println("The introduced data is wrong. Please, try again!\n"
                                + attempts + " tries left!");
         } else {
@@ -112,16 +138,25 @@ public class Bank {
             System.out.println(Main.SEPARATOR);
             System.exit(1);
         }
+
         return null;
     }
 
     public User findUser(String uid) {
-        for (User user : users) {
-            if (user.getUID().equals(uid)) {
+        for (User user: users) {
+            if (user.getUid().equals(uid)) {
                 return user;
             }
         }
+
         System.out.println("The user with the specified ID could not be found in the system.\n");
         return null;
+    }
+
+    /**
+     * Check if the introduced PIN code corresponds to the given pin hash
+     */
+    public boolean validatePin(String pin, String pinHash) throws NoSuchAlgorithmException {
+        return encryptPIN(pin).equals(pinHash);
     }
 }
