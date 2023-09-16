@@ -45,7 +45,7 @@ public class User {
         Main.database.addRecord(uid, firstName, lastName, pin);
     }
 
-    public void changePin() throws NoSuchAlgorithmException {
+    public void changePin() {
         Scanner input = new Scanner(System.in);
         System.out.print("Type your current PIN code: ");
         String oldPin = input.next();

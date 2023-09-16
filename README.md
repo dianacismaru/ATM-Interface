@@ -10,6 +10,6 @@ printing transaction history and changing the user's PIN code.
 the PIN code (made sure to have exactly 4 non-repetitive digits) and the user's names
 (only alphabetical characters were accepted);
 - using **MD5 hashing** for storing the PIN code securely;
-- creating an **unique identifier** for each user of the bank;
+- creating a **unique identifier** for each user of the bank;
 - implementing a login system that lets the user input his credentials for a
 **maximum of 3 incorrect attempts**;

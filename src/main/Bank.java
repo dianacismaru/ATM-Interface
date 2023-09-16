@@ -100,7 +100,7 @@ public class Bank {
         }
     }
 
-    public String generatePinHash(String pin) throws NoSuchAlgorithmException {
+    public String generatePinHash(String pin) {
         // Check if the introduced PIN has exactly 4 non-repetitive digits
         if (pin.length() != 4) {
             System.out.println("The PIN code should have exactly 4 digits.\n");
@@ -114,19 +114,29 @@ public class Bank {
         return encryptPIN(pin);
     }
 
-    public String encryptPIN(String pin) throws NoSuchAlgorithmException {
-        // For security reasons, encrypt the PIN with SHA-256
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] pinHashBytes = md.digest(pin.getBytes());
+    public String encryptPIN(String pin) {
+        String encryptedPin = null;
 
-        StringBuilder hexStringBuilder = new StringBuilder(2 * pinHashBytes.length);
-        for (byte b: pinHashBytes) {
-            hexStringBuilder.append(String.format("%02X", b));
+        try {
+            // For security reasons, encrypt the PIN with SHA-256
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] pinHashBytes = md.digest(pin.getBytes());
+
+            StringBuilder hexStringBuilder = new StringBuilder(2 * pinHashBytes.length);
+            for (byte b: pinHashBytes) {
+                hexStringBuilder.append(String.format("%02X", b));
+            }
+
+            encryptedPin = hexStringBuilder.toString();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        return hexStringBuilder.toString();
+        return encryptedPin;
     }
-    public User userLogin(String uid, String pin, int attempts) throws NoSuchAlgorithmException {
+
+    public User userLogin(String uid, String pin, int attempts) {
         for (User user: this.users) {
             // Check if the user exists in the system
             if (user.getUid().equals(uid) && validatePin(pin, user.getPinHash())) {
@@ -160,7 +170,7 @@ public class Bank {
     /**
      * Check if the introduced PIN code corresponds to the given pin hash
      */
-    public boolean validatePin(String pin, String pinHash) throws NoSuchAlgorithmException {
+    public boolean validatePin(String pin, String pinHash) {
         return encryptPIN(pin).equals(pinHash);
     }
 }

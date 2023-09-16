@@ -3,17 +3,20 @@ package main;
 import transactions.Transaction;
 import users.User;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class ATM {
-    public ATM() throws NoSuchAlgorithmException {
+    public ATM() {
         System.out.println("main.ATM is turning on...");
         System.out.println("\nPlease, insert your card");
-        Scanner scanner = new Scanner(System.in);
 
+        turnOn();
+    }
+
+    private void turnOn() {
         User currentUser = login();
 
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println(Main.SEPARATOR);
             System.out.println(
@@ -71,7 +74,7 @@ public class ATM {
      *
      * @return The logged-in users.User object if authentication is successful, null otherwise
      */
-    private User login() throws NoSuchAlgorithmException {
+    private User login() {
         Scanner scanner = new Scanner(System.in);
         User currentUser;
         int remainingAttempts = 3;
