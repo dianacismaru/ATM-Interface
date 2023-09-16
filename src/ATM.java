@@ -51,24 +51,35 @@ public class ATM {
                 case 7 -> {
                     System.out.println("Do not forget to take your card!");
                     System.out.println(Main.SEPARATOR);
+                    scanner.close();
                     System.exit(0);
                 }
             }
         }
     }
 
+    /**
+     * Authenticates and logs in the user into the ATM system
+     * This method allows the user to enter their unique identifier (UID) and PIN-code
+     * to authenticate themselves. The user has a limited number of login attempts
+     * before being locked out. Upon successful authentication, the user is logged in
+     *
+     * @return The logged-in User object if authentication is successful, null otherwise
+     */
     private User login() throws NoSuchAlgorithmException {
         Scanner scanner = new Scanner(System.in);
         User currentUser;
-        int attempts = 3;
+        int remainingAttempts = 3;
 
         do {
-            System.out.print("Enter your UID: ");
-            String uuid = scanner.nextLine();
+            System.out.print("Enter your User ID (UID): ");
+            String uid = scanner.nextLine();
 
-            System.out.print("Enter PIN-code, then press ENTER: ");
-            currentUser = Main.bank.userLogin(uuid, scanner.nextLine(), --attempts);
-        } while (currentUser == null && attempts > 0);
+            System.out.print("Enter your PIN-code: ");
+            String pin = scanner.nextLine();
+
+            currentUser = Main.bank.userLogin(uid, pin, --remainingAttempts);
+        } while (currentUser == null && remainingAttempts > 0);
 
         return currentUser;
     }
