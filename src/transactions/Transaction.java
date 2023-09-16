@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Scanner;
 import users.*;
 
-public class Transaction {
+public abstract class Transaction {
     private double amount;
 
     // The time and date of this transaction
@@ -32,6 +32,21 @@ public class Transaction {
         this.date = new Date();
         this.transactionType = "transfer";
     }
+
+    public Transaction createTransaction(int option) {
+        switch (option) {
+            case 1 -> {
+                return new Deposit();
+            }
+            case 2 -> {
+                return new Withdrawal();
+            }
+            default -> {
+                return new Transfer();
+            }
+        }
+    }
+    public abstract void performTransaction();
 
     public void deposit() {
         if (this.amount <= 0) {
