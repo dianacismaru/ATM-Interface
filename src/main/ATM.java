@@ -6,17 +6,26 @@ import users.User;
 import java.util.Scanner;
 
 public class ATM {
+    // The user that is currently connected to the ATM
+    private final User currentUser;
+
     public ATM() {
         System.out.println("main.ATM is turning on...");
         System.out.println("\nPlease, insert your card");
+        currentUser = login();
 
         turnOn();
     }
 
+    /**
+     * This method represents the main functionality of the ATM after it is turned on
+     * It displays a menu of options to the user, reads their choice, and performs
+     * the corresponding actions such as deposit, withdrawal, transfer, transaction
+     * history, balance inquiry, PIN code change, and exit.
+     */
     private void turnOn() {
-        User currentUser = login();
-
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
             System.out.println(Main.SEPARATOR);
             System.out.println(
@@ -29,6 +38,7 @@ public class ATM {
                             5. BALANCE
                             6. CHANGE PIN CODE
                             7. EXIT""");
+
             int option = scanner.nextInt();
             switch (option) {
                 case 1 -> {

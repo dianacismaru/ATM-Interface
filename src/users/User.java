@@ -3,7 +3,6 @@ package users;
 import transactions.Transaction;
 import main.*;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
