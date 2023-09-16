@@ -1,9 +1,14 @@
+package main;
+
+import transactions.Transaction;
+import users.User;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class ATM {
     public ATM() throws NoSuchAlgorithmException {
-        System.out.println("ATM is turning on...");
+        System.out.println("main.ATM is turning on...");
         System.out.println("\nPlease, insert your card");
         Scanner scanner = new Scanner(System.in);
 
@@ -59,12 +64,12 @@ public class ATM {
     }
 
     /**
-     * Authenticates and logs in the user into the ATM system
+     * Authenticates and logs in the user into the main.ATM system
      * This method allows the user to enter their unique identifier (UID) and PIN-code
      * to authenticate themselves. The user has a limited number of login attempts
      * before being locked out. Upon successful authentication, the user is logged in
      *
-     * @return The logged-in User object if authentication is successful, null otherwise
+     * @return The logged-in users.User object if authentication is successful, null otherwise
      */
     private User login() throws NoSuchAlgorithmException {
         Scanner scanner = new Scanner(System.in);
@@ -72,7 +77,7 @@ public class ATM {
         int remainingAttempts = 3;
 
         do {
-            System.out.print("Enter your User ID (UID): ");
+            System.out.print("Enter your users.User ID (UID): ");
             String uid = scanner.nextLine();
 
             System.out.print("Enter your PIN-code: ");

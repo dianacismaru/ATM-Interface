@@ -1,3 +1,7 @@
+package main;
+
+import users.User;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;

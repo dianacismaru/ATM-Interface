@@ -1,20 +1,16 @@
-/******************************************
- * Copyright (C) 2022 Cismaru Diana-Iuliana
- ******************************************/
+package transactions;
+
 import java.util.Date;
 import java.util.Scanner;
+import users.*;
 
 public class Transaction {
     private double amount;
 
-    /**
-     *     The time and date of this transaction
-     */
-    final Date date;
+    // The time and date of this transaction
+    private final Date date;
 
-    /**
-     *     The user that has made this transaction
-     */
+    // The user that has made this transaction
     private final User user;
 
     String transactionType;
@@ -35,12 +31,6 @@ public class Transaction {
         this.user = user;
         this.date = new Date();
         this.transactionType = "transfer";
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction type: " + transactionType + "\nAmount: " + amount
-                + "EUR\n" + date + "\n";
     }
 
     public void deposit() {
@@ -108,5 +98,11 @@ public class Transaction {
         } else {
             System.out.println("The transaction has been canceled!\n");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "transactions.Transaction type: " + transactionType + "\nAmount: " + amount
+                + "EUR\n" + date + "\n";
     }
 }

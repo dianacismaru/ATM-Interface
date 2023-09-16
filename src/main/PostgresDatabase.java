@@ -1,3 +1,5 @@
+package main;
+
 import java.sql.*;
 
 public class PostgresDatabase {
@@ -62,7 +64,7 @@ public class PostgresDatabase {
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(query);
 			
-			System.out.printf("User '%s %s' with ID '%s' has been created.\n",
+			System.out.printf("users.User '%s %s' with ID '%s' has been created.\n",
 					lastName, firstName, uid);
 
 		} catch (Exception e) {

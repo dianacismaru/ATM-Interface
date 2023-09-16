@@ -1,3 +1,8 @@
+package users;
+
+import transactions.Transaction;
+import main.*;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +22,7 @@ public class User {
 
     private double balance;
 
-    List<Transaction> transactions;
+    public List<Transaction> transactions;
 
     public void printBalance() {
         System.out.println("Your balance is: " + this.balance + "EUR");
