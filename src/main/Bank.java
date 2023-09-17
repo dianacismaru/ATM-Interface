@@ -26,8 +26,9 @@ public class Bank {
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
             String pinHash = resultSet.getString("pin_hash");
+            Double balance = resultSet.getDouble("balance");
 
-            User user = new User(this, uid, firstName, lastName, pinHash);
+            User user = new User(this, uid, firstName, lastName, pinHash, balance);
             users.add(user);
         }
     }
@@ -56,7 +57,7 @@ public class Bank {
         return uid.toString();
     }
 
-    public void createAccount() throws NoSuchAlgorithmException, SQLException {
+    public void createAccount() throws SQLException {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Input the number of users you want to create: ");
@@ -74,7 +75,7 @@ public class Bank {
         System.out.println(Main.SEPARATOR);
     }
     
-    public void requestUserData() throws NoSuchAlgorithmException, SQLException {
+    public void requestUserData() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("First Name: ");
         String firstName = scanner.next();

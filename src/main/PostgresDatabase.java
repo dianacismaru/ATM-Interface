@@ -1,5 +1,8 @@
 package main;
 
+import transactions.Transaction;
+import users.User;
+
 import java.sql.*;
 
 public class PostgresDatabase {
@@ -41,7 +44,8 @@ public class PostgresDatabase {
 					"uid VARCHAR(10) PRIMARY KEY," +
 					"first_name VARCHAR(50)," +
 					"lastName VARCHAR(50)," +
-					"pinHash VARCHAR(16)" +
+					"pinHash VARCHAR(64)," +
+					"balance DOUBLE PRECISION" +
 					")";
 
 			Statement statement = connection.createStatement();
@@ -53,20 +57,60 @@ public class PostgresDatabase {
 		}
 	}
 
-	public void addRecord(String uid, String firstName,
-						  String lastName, String pinHash) {
+	public void createTransactionsTable() {
+		try {
+			String query = "CREATE TABLE transactions (" +
+					"id serial PRIMARY KEY," +
+					"user_id VARCHAR(10)," +
+					"transaction_type VARCHAR(10)," +
+					"amount DOUBLE PRECISION," +
+					"recipient_id VARCHAR(16)," +
+					"date TIMESTAMP" +
+					")";
+
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query);
+			System.out.println("Table Created");
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void addUser(User user) {
 		try {
 			String query = String.format("INSERT INTO %s " +
 							"(uid, first_name, last_name, pin_hash)" +
 							"VALUES ('%s', '%s', '%s', '%s');",
-					"users", uid, firstName, lastName, pinHash);
+							"users", user.getUid(), user.getFirstName(),
+							user.getLastName(), user.getPinHash());
 
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(query);
 			
-			System.out.printf("users.User '%s %s' with ID '%s' has been created.\n",
-					lastName, firstName, uid);
+			System.out.printf("User '%s %s' with ID '%s' has been created.\n",
+					user.getLastName(), user.getFirstName(), user.getUid());
 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void addTransaction(Transaction transaction) {
+		try {
+			String query = "INSERT INTO transactions " +
+							"(user_id, transaction_type, amount, recipient_id, date)" +
+							"VALUES (?, ?, ?, ?, ?);";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, transaction.getUserId());
+			preparedStatement.setString(2, transaction.getTransactionType());
+			preparedStatement.setDouble(3, transaction.getAmount());
+			preparedStatement.setString(4, transaction.getRecipientId());
+			preparedStatement.setTimestamp(5, new java.sql.Timestamp(transaction.getDate().getTime()));
+
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

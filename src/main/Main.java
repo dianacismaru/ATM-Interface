@@ -14,7 +14,10 @@ public class Main {
 		// Connect to the database
 		database = new PostgresDatabase("atm_db", "postgres", "postgres");
 		database.connect();
-		// database.createUsersTable();
+
+		// Create tables
+//		database.createUsersTable();
+//		database.createTransactionsTable();
 
 		// Create the Bank
 		try {

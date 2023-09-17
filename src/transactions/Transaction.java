@@ -7,10 +7,13 @@ public abstract class Transaction {
     public double amount;
 
     // The time and date of this transaction
-    private final Date date;
+    public final Date date;
 
     // The user that has made this transaction
     public final User user;
+
+    // The user that has received this transaction
+    public String recipientId;
 
     public String transactionType;
 
@@ -37,7 +40,27 @@ public abstract class Transaction {
 
     @Override
     public String toString() {
-        return "transactions.Transaction type: " + transactionType + "\nAmount: " + amount
+        return "Transaction type: " + transactionType + "\nAmount: " + amount
                 + "EUR\n" + date + "\n";
+    }
+
+    public String getUserId() {
+        return user.getUid();
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public String getRecipientId() {
+        return recipientId;
     }
 }

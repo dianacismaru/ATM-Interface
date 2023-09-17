@@ -1,11 +1,9 @@
 package users;
 
-import transactions.Transaction;
 import main.*;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Scanner;
 
 public class User {
@@ -21,18 +19,17 @@ public class User {
 
     private double balance;
 
-    public List<Transaction> transactions;
-
     public void printBalance() {
         System.out.println("Your balance is: " + this.balance + "EUR");
     }
 
-    public User(Bank bank, String uid, String firstName, String lastName, String pinHash) {
+    public User(Bank bank, String uid, String firstName, String lastName, String pinHash, Double balance) {
         this.bank = bank;
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.pinHash = pinHash;
+        this.balance = balance;
     }
 
     public User(String firstName, String lastName, String pin, Bank bank) throws SQLException {
@@ -40,8 +37,9 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.bank = bank;
+        this.pinHash = pin;
 
-        Main.database.addRecord(uid, firstName, lastName, pin);
+        Main.database.addUser(this);
     }
 
     public void changePin() {
@@ -71,14 +69,30 @@ public class User {
         }
     }
 
+    public void updateBalance(double amount) {
+        this.balance += amount;
+
+        try {
+            String query = String.format("UPDATE users SET balance  = '%f' " +
+                    "WHERE uid = '%s'", balance, uid);
+
+            Statement statement = PostgresDatabase.connection.createStatement();
+            statement.executeUpdate(query);
+
+            System.out.println("The balance has been updated.\n");
+        } catch (Exception e) {
+            System.out.println("The balance has NOT been updated.\n");
+        }
+    }
+
     public void printTransactionHistory() {
-        if (transactions.isEmpty()) {
+/*        if (transactions.isEmpty()) {
             System.out.println("No transaction has been made yet.\n");
             return;
         }
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
-        }
+        }*/
     }
 
     public String getPinHash() {
@@ -95,10 +109,6 @@ public class User {
 
     public String getUid() {
         return uid;
-    }
-
-    public void modifyBalance(double amount) {
-        this.balance += amount;
     }
 
     public double getBalance() {

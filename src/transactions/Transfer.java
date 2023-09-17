@@ -16,7 +16,8 @@ public class Transfer extends Transaction {
 		System.out.print("Enter the ID of the user you would like to send money to: ");
 
 		Scanner scanner = new Scanner(System.in);
-		User recipient = Main.bank.findUser(scanner.next());
+		recipientId = scanner.next();
+		User recipient = Main.bank.findUser(recipientId);
 
 		if (recipient == null)
 			return;
@@ -46,10 +47,9 @@ public class Transfer extends Transaction {
 		String answer = scanner.next();
 
 		if (answer.equals("YES")) {
-			user.modifyBalance(-amount);
-			recipient.modifyBalance(amount);
+			user.updateBalance(-amount);
+			recipient.updateBalance(amount);
 			System.out.println("The transaction is complete!\n");
-			user.transactions.add(this);
 		} else {
 			System.out.println("The transaction has been canceled!\n");
 		}

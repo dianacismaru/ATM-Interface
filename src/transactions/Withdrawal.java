@@ -8,6 +8,7 @@ public class Withdrawal extends Transaction {
 	public Withdrawal(User user) {
 		super(user);
 		this.transactionType = "withdrawal";
+		this.recipientId = user.getUid();
 	}
 
 	@Override
@@ -25,9 +26,8 @@ public class Withdrawal extends Transaction {
 		if (amount > user.getBalance()) {
 			System.out.println("The withdrawal cannot be done. Your balance is too low.\n");
 		} else {
-			this.user.modifyBalance(-amount);
+			this.user.updateBalance(-amount);
 			this.transactionType = "withdrawal";
-			user.transactions.add(this);
 			System.out.println("Your balance went down with " + amount + "EUR.\n");
 		}
 	}

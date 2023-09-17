@@ -8,6 +8,7 @@ public class Deposit extends Transaction {
 	public Deposit(User user) {
 		super(user);
 		this.transactionType = "deposit";
+		this.recipientId = user.getUid();
 	}
 
 	@Override
@@ -21,9 +22,8 @@ public class Deposit extends Transaction {
 			return;
 		}
 
-		this.user.modifyBalance(this.amount);
+		this.user.updateBalance(this.amount);
 		this.transactionType = "deposit";
-		user.transactions.add(this);
 		System.out.println("Your balance increased with " + amount + "EUR.\n");
 	}
 }

@@ -44,6 +44,7 @@ public class ATM {
                 case 1, 2, 3 -> {
                     Transaction transaction = Transaction.createTransaction(option, currentUser);
                     transaction.performTransaction();
+                    Main.database.addTransaction(transaction);
                 }
                 case 4 -> {
                     currentUser.printTransactionHistory();
