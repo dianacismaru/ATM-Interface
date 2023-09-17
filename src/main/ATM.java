@@ -20,8 +20,8 @@ public class ATM {
     /**
      * This method represents the main functionality of the ATM after it is turned on
      * It displays a menu of options to the user, reads their choice, and performs
-     * the corresponding actions such as deposit, withdrawal, transfer, transaction
-     * history, balance inquiry, PIN code change, and exit.
+     * the corresponding actions such as deposit, withdrawal, transfer, bank
+     * statement, balance inquiry, PIN code change, and exit.
      */
     private void turnOn() {
         Scanner scanner = new Scanner(System.in);
@@ -34,7 +34,7 @@ public class ATM {
                             1. DEPOSIT
                             2. WITHDRAW
                             3. TRANSFER
-                            4. TRANSACTIONS HISTORY
+                            4. BANK STATEMENT
                             5. BALANCE
                             6. CHANGE PIN CODE
                             7. EXIT""");
@@ -47,7 +47,7 @@ public class ATM {
                     Main.database.addTransaction(transaction);
                 }
                 case 4 -> {
-                    currentUser.printTransactionHistory();
+                    currentUser.getBankStatement();
                 }
                 case 5 -> {
                     currentUser.printBalance();
@@ -80,7 +80,7 @@ public class ATM {
         int remainingAttempts = 3;
 
         do {
-            System.out.print("Enter your users.User ID (UID): ");
+            System.out.print("Enter your User ID (UID): ");
             String uid = scanner.nextLine();
 
             System.out.print("Enter your PIN-code: ");

@@ -2,8 +2,9 @@ package users;
 
 import main.*;
 
-import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Scanner;
 
 public class User {
@@ -19,27 +20,14 @@ public class User {
 
     private double balance;
 
-    public void printBalance() {
-        System.out.println("Your balance is: " + this.balance + "EUR");
-    }
-
-    public User(Bank bank, String uid, String firstName, String lastName, String pinHash, Double balance) {
+    public User(Bank bank, String uid, String firstName, String lastName,
+                String pinHash, Double balance) {
         this.bank = bank;
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.pinHash = pinHash;
         this.balance = balance;
-    }
-
-    public User(String firstName, String lastName, String pin, Bank bank) throws SQLException {
-        this.uid = Bank.generateUID();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bank = bank;
-        this.pinHash = pin;
-
-        Main.database.addUser(this);
     }
 
     public void changePin() {
@@ -79,20 +67,58 @@ public class User {
             Statement statement = PostgresDatabase.connection.createStatement();
             statement.executeUpdate(query);
 
-            System.out.println("The balance has been updated.\n");
         } catch (Exception e) {
-            System.out.println("The balance has NOT been updated.\n");
+            System.out.println(e.getMessage());
         }
     }
 
-    public void printTransactionHistory() {
-/*        if (transactions.isEmpty()) {
-            System.out.println("No transaction has been made yet.\n");
-            return;
+    public void printBalance() {
+        System.out.println("Your balance is: " + this.balance + "EUR");
+    }
+
+    public void getBankStatement() {
+        System.out.println(Main.SEPARATOR);
+        System.out.println("BANK STATEMENT");
+        System.out.println(Main.SEPARATOR);
+
+        System.out.println("User: " + firstName + " " + lastName);
+        System.out.println("UID: " + uid);
+        System.out.println("Date: " + new Date());
+        System.out.println("Balance: " + balance + "\n");
+
+        System.out.println("Transaction history:");
+        System.out.println(Main.SEPARATOR);
+
+        String query = String.format("SELECT * FROM transactions WHERE user_id = '%s' OR recipient_id = '%s'", uid, uid);
+        ResultSet resultSet = Main.database.getQueryResult(query);
+
+        int ct = 1;
+        try {
+            while (resultSet.next()) {
+                String transactionType = resultSet.getString("transaction_type");
+                double amount = resultSet.getDouble("amount");
+                String userId = resultSet.getString("user_id");
+                String recipientId = resultSet.getString("recipient_id");
+                Date date = new Date(resultSet.getTimestamp("date").getTime());
+
+                System.out.println(ct++ + ". Date: " + date);
+                System.out.println("Type: " + transactionType);
+
+                if (transactionType.equals("transfer")) {
+                    if (userId.equals(uid)) {
+                        System.out.println("Recipient: " + recipientId);
+                    } else {
+                        System.out.println("From: " + userId);
+                    }
+                }
+
+                System.out.println("Amount: " + amount + " EUR\n");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        for (Transaction transaction : transactions) {
-            System.out.println(transaction);
-        }*/
+
+        System.out.println(Main.SEPARATOR);
     }
 
     public String getPinHash() {

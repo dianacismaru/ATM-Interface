@@ -38,12 +38,6 @@ public abstract class Transaction {
 
     public abstract void performTransaction();
 
-    @Override
-    public String toString() {
-        return "Transaction type: " + transactionType + "\nAmount: " + amount
-                + "EUR\n" + date + "\n";
-    }
-
     public String getUserId() {
         return user.getUid();
     }

@@ -72,6 +72,7 @@ public class Bank {
             System.out.println("\nIntroduce data for a new user.");
             requestUserData();
         }
+
         System.out.println(Main.SEPARATOR);
     }
     
@@ -97,7 +98,8 @@ public class Bank {
         String pin = generatePinHash(scanner.next());
 
         if (pin != null) {
-            User user = new User(firstName, lastName, pin, this);
+            User user = new User(this, generateUID(), firstName, lastName, pin, 0.0);
+            Main.database.addUser(user);
             users.add(user);
         }
     }
@@ -150,7 +152,7 @@ public class Bank {
             System.out.println("The introduced data is wrong. Please, try again!\n"
                                + attempts + " tries left!");
         } else {
-            System.out.println("You have no more attemps left. Goodbye!");
+            System.out.println("You have no more attempts left. Goodbye!");
             System.out.println(Main.SEPARATOR);
             System.exit(1);
         }

@@ -1,6 +1,5 @@
 package main;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -10,7 +9,7 @@ public class Main {
 	public static ATM atm;
 	public final static String SEPARATOR = "---------------------------------------------------";
 
-	public static void main(String[] args) throws SQLException, NoSuchAlgorithmException {
+	public static void main(String[] args) throws SQLException {
 		// Connect to the database
 		database = new PostgresDatabase("atm_db", "postgres", "postgres");
 		database.connect();
