@@ -10,7 +10,7 @@ public class ATM {
     private final User currentUser;
 
     public ATM() {
-        System.out.println("main.ATM is turning on...");
+        System.out.println("ATM is turning on...");
         System.out.println("\nPlease, insert your card");
         currentUser = login();
 
@@ -41,20 +41,9 @@ public class ATM {
 
             int option = scanner.nextInt();
             switch (option) {
-                case 1 -> {
-                    System.out.print("Enter the amount of money you would like to deposit: ");
-                    Transaction newDeposit = new Transaction(scanner.nextDouble(), currentUser);
-                    newDeposit.deposit();
-                }
-                case 2 -> {
-                    System.out.print("Enter the amount of money you would like to withdraw: ");
-                    Transaction newWithdrawal = new Transaction(scanner.nextDouble(), currentUser);
-                    newWithdrawal.withdraw();
-                }
-                case 3 -> {
-                    System.out.print("Enter the ID of the user you would like to send money to: ");
-                    Transaction newTransfer = new Transaction(currentUser);
-                    newTransfer.transfer(Main.bank.findUser(scanner.next()));
+                case 1, 2, 3 -> {
+                    Transaction transaction = Transaction.createTransaction(option, currentUser);
+                    transaction.performTransaction();
                 }
                 case 4 -> {
                     currentUser.printTransactionHistory();
@@ -77,7 +66,7 @@ public class ATM {
     }
 
     /**
-     * Authenticates and logs in the user into the main.ATM system
+     * Authenticates and logs in the user into the ATM system
      * This method allows the user to enter their unique identifier (UID) and PIN-code
      * to authenticate themselves. The user has a limited number of login attempts
      * before being locked out. Upon successful authentication, the user is logged in

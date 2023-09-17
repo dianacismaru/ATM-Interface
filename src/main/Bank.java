@@ -26,6 +26,7 @@ public class Bank {
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
             String pinHash = resultSet.getString("pin_hash");
+
             User user = new User(this, uid, firstName, lastName, pinHash);
             users.add(user);
         }

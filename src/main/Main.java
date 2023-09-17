@@ -11,10 +11,12 @@ public class Main {
 	public final static String SEPARATOR = "---------------------------------------------------";
 
 	public static void main(String[] args) throws SQLException, NoSuchAlgorithmException {
+		// Connect to the database
 		database = new PostgresDatabase("atm_db", "postgres", "postgres");
 		database.connect();
-		//database.createUsersTable();
+		// database.createUsersTable();
 
+		// Create the Bank
 		try {
 			bank = new Bank();
 		} catch (SQLException e) {

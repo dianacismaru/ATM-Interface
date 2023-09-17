@@ -12,7 +12,7 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String uid;
-    private Bank bank;
+    private final Bank bank;
 
     /**
      *     The SHA-256 hash of the user's PIN
