@@ -8,16 +8,16 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class User {
+    // The user's credentials
     private final String firstName;
     private final String lastName;
     private final String uid;
     private final Bank bank;
 
-    /**
-     *     The SHA-256 hash of the user's PIN
-     */
+    // The SHA-256 hash of the user's PIN
     private String pinHash;
 
+    // The account's balance
     private double balance;
 
     public User(Bank bank, String uid, String firstName, String lastName,
@@ -30,6 +30,9 @@ public class User {
         this.balance = balance;
     }
 
+    /**
+     * Change the current user's PIN code
+     */
     public void changePin() {
         Scanner input = new Scanner(System.in);
         System.out.print("Type your current PIN code: ");
@@ -57,6 +60,10 @@ public class User {
         }
     }
 
+    /**
+     * Modify the user's balance by 'amount' euro
+     * @param amount the amount of euros that will be added or deducted from the balance
+     */
     public void updateBalance(double amount) {
         this.balance += amount;
 
@@ -72,10 +79,16 @@ public class User {
         }
     }
 
+    /**
+     * Print the user's balance
+     */
     public void printBalance() {
         System.out.println("Your balance is: " + this.balance + "EUR");
     }
 
+    /**
+     * Print the Bank Statement of the current user
+     */
     public void getBankStatement() {
         System.out.println(Main.SEPARATOR);
         System.out.println("BANK STATEMENT");
@@ -140,5 +153,4 @@ public class User {
     public double getBalance() {
         return balance;
     }
-
 }

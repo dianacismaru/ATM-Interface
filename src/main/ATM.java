@@ -9,6 +9,9 @@ public class ATM {
     // The user that is currently connected to the ATM
     private final User currentUser;
 
+    /**
+     * Initialize the ATM by logging with an existing user
+     */
     public ATM() {
         System.out.println("ATM is turning on...");
         System.out.println("\nPlease, insert your card");

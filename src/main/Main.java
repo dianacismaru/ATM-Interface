@@ -24,11 +24,7 @@ public class Main {
 		*/
 
 		// Initialize the Bank
-		try {
-			bank = new Bank();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		bank = new Bank();
 
 		Scanner input = new Scanner(System.in);
 		System.out.println(SEPARATOR);
