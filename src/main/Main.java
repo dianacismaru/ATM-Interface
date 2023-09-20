@@ -7,18 +7,23 @@ public class Main {
 	public static PostgresDatabase database;
 	public static Bank bank;
 	public static ATM atm;
+
+	// String used for separating ATM outputs
 	public final static String SEPARATOR = "---------------------------------------------------";
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) {
 		// Connect to the database
 		database = new PostgresDatabase("atm_db", "postgres", "postgres");
 		database.connect();
 
 		// Create tables
-//		database.createUsersTable();
-//		database.createTransactionsTable();
+		// Uncomment when first running the program, then comment again
+		/*
+		database.createUsersTable();
+		database.createTransactionsTable();
+		*/
 
-		// Create the Bank
+		// Initialize the Bank
 		try {
 			bank = new Bank();
 		} catch (SQLException e) {
@@ -31,10 +36,10 @@ public class Main {
 		while (true) {
 			System.out.println(
 					"""
-							Choose what you want to do (press the number and ENTER):
-							1. CREATE A NEW ACCOUNT
-							2. ACCESS THE ATM
-							3. EXIT""");
+						Choose what you want to do (press the number and ENTER):
+						1. CREATE A NEW ACCOUNT
+						2. ACCESS THE ATM
+						3. EXIT""");
 
 			int option = input.nextInt();
 			switch (option) {
