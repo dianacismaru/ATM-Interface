@@ -181,11 +181,10 @@ public class Bank {
      * @return the user that has logged in
      */
     public User userLogin(String uid, String pin, int attempts) {
-        for (User user: this.users) {
-            // Check if the user exists in the system
-            if (user.getUid().equals(uid) && validatePin(pin, user.getPinHash())) {
-                return user;
-            }
+        // Check if the user exists in the system
+        User user = findUser(uid);
+        if (user != null && validatePin(pin, user.getPinHash())) {
+            return user;
         }
 
         // If there's no more attempts left
