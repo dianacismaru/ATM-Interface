@@ -17,6 +17,9 @@ public class PostgresDatabase {
 		this.password = password;
 	}
 
+	/**
+	 * Connect to the PostgreSQL database
+	 */
 	public void connect() {
 		String jdbcUrl = "jdbc:postgresql://localhost:5432/" + dbName;
 
@@ -38,6 +41,10 @@ public class PostgresDatabase {
 		}
 	}
 
+	/**
+	 * Method that creates the users table
+	 * It is meant to be used one time only
+	 */
 	public void createUsersTable() {
 		try {
 			String query = "CREATE TABLE users (" +
@@ -57,6 +64,10 @@ public class PostgresDatabase {
 		}
 	}
 
+	/**
+	 * Method that creates the transactions table
+	 * It is meant to be used one time only
+	 */
 	public void createTransactionsTable() {
 		try {
 			String query = "CREATE TABLE transactions (" +
@@ -77,6 +88,10 @@ public class PostgresDatabase {
 		}
 	}
 
+	/**
+	 * Add a user into the users table
+	 * @param user the User object that will be added
+	 */
 	public void addUser(User user) {
 		try {
 			String query = String.format("INSERT INTO %s " +
@@ -96,6 +111,10 @@ public class PostgresDatabase {
 		}
 	}
 
+	/**
+	 * Add a transaction into the transactions table
+	 * @param transaction the Transaction object that will be added
+	 */
 	public void addTransaction(Transaction transaction) {
 		try {
 			String query = "INSERT INTO transactions " +
@@ -116,6 +135,10 @@ public class PostgresDatabase {
 		}
 	}
 
+	/**
+	 * @param query a String SQL formatted query
+	 * @return the ResultSet of the query, or null if the query throws an exception
+	 */
 	public ResultSet getQueryResult(String query) {
 		try {
 			Statement statement = connection.createStatement();
@@ -123,7 +146,7 @@ public class PostgresDatabase {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			return null;
 		}
-		return null;
 	}
 }

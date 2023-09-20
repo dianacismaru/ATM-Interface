@@ -19,8 +19,10 @@ public class Transfer extends Transaction {
 		recipientId = scanner.next();
 		User recipient = Main.bank.findUser(recipientId);
 
-		if (recipient == null)
+		if (recipient == null) {
+			System.out.println("The user with the specified ID could not be found in the system.\n");
 			return;
+		}
 
 		if (recipient.equals(user)) {
 			System.out.println("You can't transfer money to yourself.\n");

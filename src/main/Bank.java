@@ -37,12 +37,26 @@ public class Bank {
     }
 
     /**
+     * Search for a user in the cache by the given UID
+     * @param uid the unique user ID
+     * @return the wanted user, or null if there's none with the given UID
+     * */
+    public User findUser(String uid) {
+        for (User user: users) {
+            if (user.getUid().equals(uid)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Generate a unique user ID (UID) consisting of a random 6-digit numeric value.
-     * The method ensures the generated UID is unique by querying the database to
+     * The method ensures the generated UID is unique by querying the user cache to
      * verify its non-existence among existing users
      * @return A unique 6-digit numeric user ID as a String
      */
-    public static String generateUID() {
+    public String generateUID() {
         Random random = new Random();
         boolean isUidUnique = true;
         StringBuilder uid;
@@ -52,19 +66,12 @@ public class Bank {
             uid = new StringBuilder();
             int uidLen = 6;
             for (int c = 0; c < uidLen; c++) {
-                uid.append((Integer) random.nextInt(10));
+                uid.append((Integer)random.nextInt(10));
             }
 
             // Make sure the ID is unique
-            String query = String.format("SELECT * FROM users WHERE uid = '%s'", uid);
-            ResultSet resultSet = Main.database.getQueryResult(query);
-
-            try {
-                if (resultSet.next()) {
-                    isUidUnique = false;
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            if (findUser(uid.toString()) != null) {
+                isUidUnique = false;
             }
         } while(!isUidUnique);
 
@@ -191,17 +198,6 @@ public class Bank {
             System.exit(1);
         }
 
-        return null;
-    }
-
-    public User findUser(String uid) {
-        for (User user: users) {
-            if (user.getUid().equals(uid)) {
-                return user;
-            }
-        }
-
-        System.out.println("The user with the specified ID could not be found in the system.\n");
         return null;
     }
 }
