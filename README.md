@@ -26,9 +26,9 @@ finances securely.
 - Change PIN code
 
 ## Prerequisites
-When first running the program, you must create the two tables: *users* and
-*transactions*. There are two commented method calls that create these tables 
-in the *main* method. You should uncomment these lines when first running the
+When first running the program, you must create the two tables: `users` and
+`transactions`. There are two commented method calls that create these tables 
+in the `main` method. You should uncomment these lines when first running the
 program, them comment them again. The RDBMS used is **PostgreSQL**.
 
 ![](images/create-tables.png)
@@ -60,7 +60,7 @@ Once logged in, you can choose from the following options:
 6. Change PIN Code
 7. Exit
 
-For the first three options, an **abstract class** called **Transaction** with
+For the first three options, an **abstract class** called `Transaction` with
 a **Factory Method Design Pattern** is utilized. Depending on the selected
 option, an instance of Deposit, Withdrawal or Transfer is created, and
 specific transaction operations are executed.
